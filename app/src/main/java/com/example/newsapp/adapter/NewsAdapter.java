@@ -2,6 +2,7 @@ package com.example.newsapp.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,8 +13,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.newsapp.R;
+import com.example.newsapp.connection.DBNewsAdapter;
 import com.example.newsapp.model.NewsData;
-import com.example.newsapp.ui.NewsActivity;
 import com.example.newsapp.ui.NewsDetailActivity;
 import com.squareup.picasso.Picasso;
 
@@ -75,12 +76,27 @@ public class NewsAdapter extends BaseAdapter {
         holder.title.setText(newsData.getArticles().get(position).getTitle());
         holder.date.setText(newsData.getArticles().get(position).getPublishedAt());
 
+        DBNewsAdapter adapter = DBNewsAdapter.getInstance(context);
+        adapter.open();
+        if (adapter.articleExists(newsData.getArticles().get(position))) {
+            holder.readLater.setSelected(true);
+        } else {
+            holder.readLater.setSelected(false);
+        }
+        adapter.close();
+
         holder.readLater.setOnClickListener(v -> {
-            if (!holder.readLater.isSelected())
+            if (!holder.readLater.isSelected()) {
+                adapter.open();
+                adapter.writeArticleToDatabase(newsData.getArticles().get(position));
+                adapter.close();
                 holder.readLater.setSelected(true);
-            else
+            } else {
+                adapter.open();
+                adapter.removeFromDb(newsData.getArticles().get(position).getTitle());
+                adapter.close();
                 holder.readLater.setSelected(false);
-            Toast.makeText(context, "Read later", Toast.LENGTH_SHORT).show();
+            }
         });
 
         convertView.setOnClickListener(v -> {

@@ -78,6 +78,7 @@ public class NewsActivity extends AppCompatActivity {
                                 article.setTitle(dataobj.getString("title"));
                                 article.setPublishedAt(dataobj.getString("publishedAt"));
                                 article.setUrlToImage(dataobj.getString("urlToImage"));
+                                article.setDescription(dataobj.getString("description"));
                                 article.setUrl(dataobj.getString("url"));
                                 article.setAuthor(dataobj.getString("author"));
                                 article.setContent(dataobj.getString("content"));
