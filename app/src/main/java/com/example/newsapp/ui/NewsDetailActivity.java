@@ -1,10 +1,18 @@
 package com.example.newsapp.ui;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -50,7 +58,23 @@ public class NewsDetailActivity extends AppCompatActivity {
             newsAuthor.setText(article.getAuthor());
         newsPublish.setText(article.getPublishedAt());
         newsTitle.setText(article.getTitle());
-        newsContent.setText(article.getContent());
+
+        String content = article.getContent();
+        if (content.contains("[+")) {
+            String readMore = content.replace(content.split("… ")[1], "Read More…");
+            SpannableString ss = new SpannableString(readMore);
+            ClickableSpan click = new ClickableSpan() {
+                @Override
+                public void onClick(@NonNull View widget) {
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(article.getUrl()));
+                    startActivity(browserIntent);
+                }
+            };
+
+            ss.setSpan(click, content.length() - 13, content.length() - 3, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            newsContent.setText(ss);
+            newsContent.setMovementMethod(LinkMovementMethod.getInstance());
+        }
     }
 
     @Override
