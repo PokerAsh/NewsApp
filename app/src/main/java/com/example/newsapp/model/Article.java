@@ -4,7 +4,9 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-public class Article {
+import java.io.Serializable;
+
+public class Article implements Serializable {
     private Source source;
     private String author;
     private String title;

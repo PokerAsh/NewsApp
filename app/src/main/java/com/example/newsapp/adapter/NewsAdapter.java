@@ -1,6 +1,7 @@
 package com.example.newsapp.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,9 +9,12 @@ import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.newsapp.R;
 import com.example.newsapp.model.NewsData;
+import com.example.newsapp.ui.NewsActivity;
+import com.example.newsapp.ui.NewsDetailActivity;
 import com.squareup.picasso.Picasso;
 
 public class NewsAdapter extends BaseAdapter {
@@ -71,6 +75,19 @@ public class NewsAdapter extends BaseAdapter {
         holder.title.setText(newsData.getArticles().get(position).getTitle());
         holder.date.setText(newsData.getArticles().get(position).getPublishedAt());
 
+        holder.readLater.setOnClickListener(v -> {
+            if (!holder.readLater.isSelected())
+                holder.readLater.setSelected(true);
+            else
+                holder.readLater.setSelected(false);
+            Toast.makeText(context, "Read later", Toast.LENGTH_SHORT).show();
+        });
+
+        convertView.setOnClickListener(v -> {
+            Intent detailIntent = new Intent(context, NewsDetailActivity.class);
+            detailIntent.putExtra("article", newsData.getArticles().get(position));
+            context.startActivity(detailIntent);
+        });
         return convertView;
     }
 

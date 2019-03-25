@@ -1,10 +1,12 @@
 package com.example.newsapp.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -74,6 +76,9 @@ public class NewsActivity extends AppCompatActivity {
                                 article.setTitle(dataobj.getString("title"));
                                 article.setPublishedAt(dataobj.getString("publishedAt"));
                                 article.setUrlToImage(dataobj.getString("urlToImage"));
+                                article.setUrl(dataobj.getString("url"));
+                                article.setAuthor(dataobj.getString("author"));
+                                article.setContent(dataobj.getString("content"));
 
                                 articles.add(article);
                             }
