@@ -2,7 +2,6 @@ package com.example.newsapp.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,26 +9,33 @@ import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.newsapp.R;
 import com.example.newsapp.connection.DBNewsAdapter;
+import com.example.newsapp.model.Article;
 import com.example.newsapp.model.NewsData;
 import com.example.newsapp.ui.NewsDetailActivity;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+
 public class NewsAdapter extends BaseAdapter {
     private Context context;
-    private NewsData newsData;
+    private ArrayList<Article> articleList;
 
     public NewsAdapter(Context context, NewsData newsData) {
         this.context = context;
-        this.newsData = newsData;
+        this.articleList = newsData.getArticles();
+    }
+
+    public NewsAdapter(Context context, ArrayList<Article> articles) {
+        this.context = context;
+        this.articleList = articles;
     }
 
     @Override
     public int getViewTypeCount() {
-        return getCount();
+        return 1;
     }
 
     @Override
@@ -39,12 +45,12 @@ public class NewsAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return newsData.getArticles().size();
+        return articleList.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return newsData.getArticles().get(position);
+        return articleList.get(position);
     }
 
     @Override
@@ -65,43 +71,43 @@ public class NewsAdapter extends BaseAdapter {
             holder.iv = convertView.findViewById(R.id.newsImage);
             holder.title = convertView.findViewById(R.id.newsTitle);
             holder.date = convertView.findViewById(R.id.newsDate);
-            holder.readLater = convertView.findViewById(R.id.readLaterButton);
+            holder.liked = convertView.findViewById(R.id.likeButton);
 
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        Picasso.get().load(newsData.getArticles().get(position).getUrlToImage()).into(holder.iv);
-        holder.title.setText(newsData.getArticles().get(position).getTitle());
-        holder.date.setText(newsData.getArticles().get(position).getPublishedAt());
+        Picasso.get().load(articleList.get(position).getUrlToImage()).into(holder.iv);
+        holder.title.setText(articleList.get(position).getTitle());
+        holder.date.setText(articleList.get(position).getPublishedAt());
 
         DBNewsAdapter adapter = DBNewsAdapter.getInstance(context);
         adapter.open();
-        if (adapter.articleExists(newsData.getArticles().get(position))) {
-            holder.readLater.setSelected(true);
+        if (adapter.articleExists(articleList.get(position))) {
+            holder.liked.setSelected(true);
         } else {
-            holder.readLater.setSelected(false);
+            holder.liked.setSelected(false);
         }
         adapter.close();
 
-        holder.readLater.setOnClickListener(v -> {
-            if (!holder.readLater.isSelected()) {
+        holder.liked.setOnClickListener(v -> {
+            if (!holder.liked.isSelected()) {
                 adapter.open();
-                adapter.writeArticleToDatabase(newsData.getArticles().get(position));
+                adapter.writeArticleToDatabase(articleList.get(position));
                 adapter.close();
-                holder.readLater.setSelected(true);
+                holder.liked.setSelected(true);
             } else {
                 adapter.open();
-                adapter.removeFromDb(newsData.getArticles().get(position).getTitle());
+                adapter.removeFromDb(articleList.get(position).getTitle());
                 adapter.close();
-                holder.readLater.setSelected(false);
+                holder.liked.setSelected(false);
             }
         });
 
         convertView.setOnClickListener(v -> {
             Intent detailIntent = new Intent(context, NewsDetailActivity.class);
-            detailIntent.putExtra("article", newsData.getArticles().get(position));
+            detailIntent.putExtra("article", articleList.get(position));
             context.startActivity(detailIntent);
         });
         return convertView;
@@ -110,6 +116,6 @@ public class NewsAdapter extends BaseAdapter {
     private class ViewHolder {
         private TextView title, date;
         private ImageView iv;
-        private ImageButton readLater;
+        private ImageButton liked;
     }
 }

@@ -83,6 +83,10 @@ public class Article implements Serializable {
         return dtfOut.print(jodaTime);
     }
 
+    public String getPublishedAtISO(){
+        return publishedAt;
+    }
+
     public void setPublishedAt(String publishedAt) {
         this.publishedAt = publishedAt;
     }

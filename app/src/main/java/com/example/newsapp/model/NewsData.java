@@ -1,11 +1,12 @@
 package com.example.newsapp.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class NewsData {
     private String status;
     private int totalResults;
-    private List<Article> articles = null;
+    private ArrayList<Article> articles = null;
 
     public String getStatus() {
         return status;
@@ -23,11 +24,11 @@ public class NewsData {
         this.totalResults = totalResults;
     }
 
-    public List<Article> getArticles() {
+    public ArrayList<Article> getArticles() {
         return articles;
     }
 
-    public void setArticles(List<Article> articles) {
+    public void setArticles(ArrayList<Article> articles) {
         this.articles = articles;
     }
 }

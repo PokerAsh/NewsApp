@@ -91,7 +91,7 @@ public class DBNewsAdapter {
         cv.put("description", article.getDescription());
         cv.put("url", article.getUrl());
         cv.put("urlToImage", article.getUrlToImage());
-        cv.put("publishedAt", article.getPublishedAt());
+        cv.put("publishedAt", article.getPublishedAtISO());
         cv.put("content", article.getContent());
         return cv;
     }
