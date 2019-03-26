@@ -97,6 +97,11 @@ public class DBNewsAdapter {
     }
 
     public void removeFromDb(String title) {
+        if (title.length() > 1) {
+            title = title.replace("'", "");
+            title = title.replace("\"", "");
+            title = title.trim();
+        }
         String columns = "title LIKE '" + title + "%'";
         Cursor mCursor = database.query(table, null, columns, null, null, null, null);
         if (mCursor.moveToFirst()) {

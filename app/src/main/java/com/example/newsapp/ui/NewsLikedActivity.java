@@ -26,6 +26,12 @@ public class NewsLikedActivity extends AppCompatActivity {
         setViews();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setUpList();
+    }
+
     private void setViews() {
         Toolbar toolbar = findViewById(R.id.toolbar);
         newsList = findViewById(R.id.newsList);
@@ -36,8 +42,6 @@ public class NewsLikedActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setTitle("LikedNews");
         }
-
-        setUpList();
     }
 
     private void setUpList() {

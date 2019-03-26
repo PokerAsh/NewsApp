@@ -22,6 +22,7 @@ import com.example.newsapp.R;
 import com.example.newsapp.adapter.NewsAdapter;
 import com.example.newsapp.model.Article;
 import com.example.newsapp.model.NewsData;
+import com.example.newsapp.util.InternetConnection;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -44,7 +45,15 @@ public class NewsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_news);
         Log.d(TAG, API_KEY);
         setViews();
-        loadData();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (InternetConnection.isInternetAvailable(this))
+            loadData();
+        else
+            Toast.makeText(this, "Check internet connection", Toast.LENGTH_SHORT).show();
     }
 
     private void setViews() {
@@ -65,6 +74,8 @@ public class NewsActivity extends AppCompatActivity {
                 response -> {
                     try {
                         JSONObject obj = new JSONObject(response);
+                        Log.d(TAG, "loadData: " + obj.toString());
+                        Log.d(TAG, "loadData: " + obj.optString("status"));
                         if (obj.optString("status").equals("ok")) {
 
                             newsData = new NewsData();
@@ -90,17 +101,20 @@ public class NewsActivity extends AppCompatActivity {
                         } else {
                             JSONObject errorMessage = obj.getJSONObject("message");
                             Toast.makeText(this, errorMessage.toString(), Toast.LENGTH_SHORT).show();
+                            Log.d(TAG, "loadData: " + errorMessage.toString());
                         }
 
                     } catch (JSONException e) {
                         progressBar.setVisibility(View.GONE);
                         Toast.makeText(this, e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                        Log.d(TAG, "loadData: " + e.getLocalizedMessage());
                         e.printStackTrace();
                     }
                 },
                 error -> {
                     progressBar.setVisibility(View.GONE);
                     Toast.makeText(this, error.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                    Log.d(TAG, "loadData: " + error.getLocalizedMessage());
                 });
 
         // request queue
